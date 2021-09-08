@@ -18,12 +18,12 @@ export function isMathJaxVersion3( version ) {
 
 // Check if equation has delimiters.
 export function hasDelimiters( text ) {
-	return text.match( /^(\\\[.*?\\\]|\\\(.*?\\\))$/ );
+	return text.match( /^(\[\[.*?\]\]|\$\$.*?\$\$)$/ );
 }
 
 // Find delimiters count
 export function delimitersCounts( text ) {
-	return text.match( /(\\\[|\\\]|\\\(|\\\))/g ).length;
+	return text.match( /(\[\[|\]\]|\$\$|\$\$)/g ).length;
 }
 
 // Extract delimiters and figure display mode for the model
@@ -31,8 +31,8 @@ export function extractDelimiters( equation ) {
 	equation = equation.trim();
 
 	// Remove delimiters (e.g. \( \) or \[ \])
-	const hasInlineDelimiters = equation.includes( '\\(' ) && equation.includes( '\\)' );
-	const hasDisplayDelimiters = equation.includes( '\\[' ) && equation.includes( '\\]' );
+	const hasInlineDelimiters = equation.includes( '$$' ) && equation.includes( '$$' );
+	const hasDisplayDelimiters = equation.includes( '[[' ) && equation.includes( ']]' );
 	if ( hasInlineDelimiters || hasDisplayDelimiters ) {
 		equation = equation.substring( 2, equation.length - 2 ).trim();
 	}
@@ -166,9 +166,9 @@ function renderMathJax3( equation, element, display, cb ) {
 
 function renderMathJax2( equation, element, display ) {
 	if ( display ) {
-		element.innerHTML = '\\[' + equation + '\\]';
+		element.innerHTML = '[[' + equation + ']]';
 	} else {
-		element.innerHTML = '\\(' + equation + '\\)';
+		element.innerHTML = '$$' + equation + '$$';
 	}
 	// eslint-disable-next-line
 	MathJax.Hub.Queue( [ 'Typeset', MathJax.Hub, element ] );
